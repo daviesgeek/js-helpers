@@ -9,5 +9,9 @@ A basic dependency injection helper.
 
 A simple DOM selector and manipulator.
 
+## Router
+
+Simple routing, made easy
+
 ## RestJS
 An "ORM" style library for consuming REST APIs. See [the RestJS repo](https://github.com/daviesgeek/restjs).
