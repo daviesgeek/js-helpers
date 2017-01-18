@@ -51,7 +51,12 @@ DI.resolve = function (value) {
  */
 DI.call = function (func) {
 
-  var funcArgs = this._parseArgs(func)
+  if (func instanceof Array) {
+    var funcArgs = func
+    var func = funcArgs.pop()
+  } else {
+    var funcArgs = this._parseArgs(func)
+  }
 
   var resolved = []
 

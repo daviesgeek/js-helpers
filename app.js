@@ -9,6 +9,10 @@ var functionTwo = function (logger, http) {
   http.get({url: "test"})
 }
 
+var functionWithArrayDeps = ['http', function(h) {
+  h.get({url: "test"})
+}]
+
 // Singleton binding
 DI.bindSingleton('Logger', function() {
 
@@ -57,3 +61,4 @@ DI.bindSingleton('http', function(Logger) {
 
 DI.call(functionOne)
 DI.call(functionTwo)
+DI.call(functionWithArrayDeps)
