@@ -1,0 +1,11 @@
+{
+  "name": "js-helpers",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:daviesgeek/js-helpers.git",
+  "author": "Matthew Davies <daviesgeek@icloud.com>",
+  "license": "MIT",
+  "dependencies": {
+    "q": "^1.4.1"
+  }
+}
