@@ -49,10 +49,45 @@ DI.resolve = function (value) {
 /**
  * Calls a given function, injecting the dependencies as needed!
  * @param  {function} func
+ * @param  {object} bindings additional bindings to resolve from
  * @return {mixed} the function result
  */
-DI.call = function (func) {
+DI.call = function (func, bindings) {
+  return DI.bindParams(func, bindings)()
+};
 
+/**
+ * Binds the resolved parameters to a given functions
+ * @param  {function} func
+ * @param  {object} bindings additional bindings to resolve from
+ * @return {mixed} the function result
+ */
+DI.bindParams = function (func, bindings) {
+
+  var funcArgs = DI._getArgsFromFunc(func)
+
+  var resolved = [];
+
+  for (var i = 0; i < funcArgs.length; i++) {
+    var dependency
+
+    try {
+      dependency = DI.resolve(funcArgs[i])
+    } catch(e) {
+      if(funcArgs[i] in bindings) {
+        dependency = bindings[funcArgs[i]]
+      } else {
+        throw e;
+      }
+    }
+
+    resolved.push(dependency);
+  };
+
+  return Function.prototype.bind.apply(func, [func].concat(resolved));
+}
+
+DI._getArgsFromFunc = function (func) {
   // If this is actually an array,
   if (func instanceof Array) {
 
@@ -67,14 +102,8 @@ DI.call = function (func) {
     var funcArgs = this._parseArgs(func)
   }
 
-  var resolved = [];
-
-  for (var i = 0; i < funcArgs.length; i++) {
-    resolved.push(DI.resolve(funcArgs[i]));
-  };
-
-  return func.apply(func, resolved);
-};
+  return funcArgs;
+}
 
 /**
  * Parses the argument names from a given function
