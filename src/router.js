@@ -3,6 +3,7 @@
 var Router = {}
 
 Router._routes = [];
+Router._routeChangeListeners = [];
 
 Router.html5Mode = false;
 
@@ -27,11 +28,13 @@ Router.findCurrentRoute = function () {
   for(var name in Router._routes) {
     var route = Router._routes[name];
 
-    var urlPattern = route.url
+    var urlPattern = '^' + route.url + '$'
     urlPattern = urlPattern.replace(/\//g, '\\\/')
     urlPattern = urlPattern.replace(/\:\w+\:/g, '(.*)')
 
-    if (path.match(urlPattern).length) {
+    var matches = path.match(new RegExp(urlPattern))
+
+    if (matches && matches.length) {
       return Object.assign(route, {params: Router._getRouteParams(path, route)});
     }
   }
@@ -56,6 +59,14 @@ Router.stopListening = function () {
 Router.startListening = function () {
   Router._onLocationChange();
   window.onhashchange = Router._onLocationChange;
+
+  if(Router.html5Mode === false && window.location.hash === "") {
+    window.location.hash = "#/"
+  }
+}
+
+Router.onRouteChange = function (func) {
+  Router._routeChangeListeners.push(func)
 }
 
 Router._getRouteParams = function(url, route) {
@@ -83,7 +94,13 @@ Router._getRouteParams = function(url, route) {
 }
 
 Router._onLocationChange = function (argument) {
-  Router._currentRoute = Router.findCurrentRoute();
+  var prevRoute = Router._currentRoute
+  var nextRoute = Router.findCurrentRoute();
+
+  for (var i = 0; i < Router._routeChangeListeners.length; i++) {
+    Router._routeChangeListeners[i](prevRoute, nextRoute)
+  }
+  Router._currentRoute = nextRoute;
 }
 
 window.Router = Router;
