@@ -1,15 +1,59 @@
-var logger = function () {
+var functionOne = function(logger) {
+  logger.log('test')
 
-  this.debug = function (value) {
-    console.log(value)
+}
+
+var functionTwo = function (logger, http) {
+  logger.log('test instance')
+
+  http.get({url: "test"})
+}
+
+// Singleton binding
+DI.bindSingleton('Logger', function() {
+
+  var Logger = function() {
+
+    this.createdAt = new Date().getMilliseconds()
+
+    this.log = function(value) {
+      console.log('Singleton ' + this.createdAt + ':', value)
+    }
+
   }
 
-}
+  return new Logger()
+})
 
-var testFunction = function(logger, test) {
-  logger.debug('test!!')
-}
+// Factory
+DI.bindFactory('logger', function() {
 
-DI.bind('logger', logger)
+  var Logger = function() {
 
-DI.call(testFunction)
+    this.createdAt = new Date().getMilliseconds()
+
+    this.log = function(value) {
+      console.log('Instance ' + this.createdAt + ':', value)
+    }
+
+  }
+
+  return function LoggerFactory() {
+    return new Logger()
+  }
+})
+
+// Singleton with bindings
+DI.bindSingleton('http', function(Logger) {
+  var Http = function() {
+
+    this.get = function(value) {
+      Logger.log('whoa...http call made!!', value)
+    }
+  }
+
+  return new Http
+})
+
+DI.call(functionOne)
+DI.call(functionTwo)
