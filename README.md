@@ -1,4 +1,2 @@
-# js-di
-A dead simple DI library for JavaScript
-
-See the demo folder for examples 
+# js-helpers
+A collection of JavaScript helpers to do common tasks
