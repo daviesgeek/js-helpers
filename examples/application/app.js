@@ -20,7 +20,7 @@ app.registerRoute('home', {
   controller: 'AppController',
   resolve: {
     data: function () {
-      return Q.Promise(function(resolve) {
+      return new Promise(function(resolve) {
         resolve({data: 'whooot!'});
       });
     }

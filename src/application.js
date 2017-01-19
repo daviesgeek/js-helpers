@@ -28,7 +28,7 @@ var Application = function () {
     var resolvedData = {}
 
     if(route.resolve) {
-      var promises = [Q.Promise(function (resolve) {
+      var promises = [new Promise(function (resolve) {
         resolve()
       })]
 
@@ -47,7 +47,7 @@ var Application = function () {
 
       }
 
-      Q.all(promises).then(function () {
+      Promise.all(promises).then(function () {
         DI.call(this._getController(route.controller), resolvedData)
       }.bind(this))
     }
