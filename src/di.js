@@ -82,6 +82,9 @@ DI.Container = function (name) {
 
       // And the last element is the actual function
       var func = funcArgs.pop();
+      if(typeof func !== 'function') {
+        throw new TypeError('The array you passed in does not contain a function as the last element')
+      }
     } else {
 
       // Else, treat it like a normal function

@@ -173,4 +173,25 @@ describe('Dependency Injection: ', function () {
 
   })
 
+  it('should throw an error if the value cannot be found', function () {
+    function shouldThrowError() {
+      container.call(function (value) {})
+    }
+
+    expect(shouldThrowError).to.throw(ReferenceError)
+  })
+
+  it('should throw an error if the given array does not contain a function', function () {
+    function shouldThrowError1() {
+      container.call(['value'])
+    }
+
+    function shouldThrowError2() {
+      container.call([function() {}, 'value'])
+    }
+
+    expect(shouldThrowError1).to.throw(TypeError)
+    expect(shouldThrowError2).to.throw(TypeError)
+  })
+
 })
