@@ -1,15 +1,19 @@
 "use strict";
 
-var Application = function () {
+var Application = function (name) {
+
+  this.name = name
 
   this._controllers = {}
+
+  this.container = DI.createContainer(name)
 
   this.registerController = function (name, func) {
     this._controllers[name] = func
   }
 
   this.registerSingleton = function (name, func) {
-    DI.bindSingleton(name, func)
+    this.container.bindSingleton(name, func)
   }
 
   this.registerRoute = function (name, route) {
@@ -33,7 +37,7 @@ var Application = function () {
       })]
 
       for(var item in route.resolve) {
-        var resolve = DI.call(route.resolve[item])
+        var resolve = this.container.call(route.resolve[item])
 
         // If it returns a promise
         if('then' in resolve) {
@@ -48,7 +52,7 @@ var Application = function () {
       }
 
       Promise.all(promises).then(function () {
-        DI.call(this._getController(route.controller), resolvedData)
+        this.container.call(this._getController(route.controller), resolvedData)
       }.bind(this))
     }
 

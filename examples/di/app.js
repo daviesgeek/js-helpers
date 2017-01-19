@@ -13,8 +13,10 @@ var functionWithArrayDeps = ['http', function(h) {
   h.get({url: "test"})
 }]
 
+var container = DI.createContainer()
+
 // Singleton binding
-DI.bindSingleton('Logger', function() {
+container.bindSingleton('Logger', function() {
 
   var Logger = function() {
 
@@ -30,7 +32,7 @@ DI.bindSingleton('Logger', function() {
 })
 
 // Factory
-DI.bindFactory('logger', function() {
+container.bindFactory('logger', function() {
 
   var Logger = function() {
 
@@ -48,7 +50,7 @@ DI.bindFactory('logger', function() {
 })
 
 // Singleton with bindings
-DI.bindSingleton('http', function(Logger) {
+container.bindSingleton('http', function(Logger) {
   var Http = function() {
 
     this.get = function(value) {
@@ -59,6 +61,6 @@ DI.bindSingleton('http', function(Logger) {
   return new Http
 })
 
-DI.call(functionOne)
-DI.call(functionTwo)
-DI.call(functionWithArrayDeps)
+container.call(functionOne)
+container.call(functionTwo)
+container.call(functionWithArrayDeps)
