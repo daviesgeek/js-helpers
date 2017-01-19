@@ -11,8 +11,8 @@ View.render = function (html, context) {
 };
 
 View._interpolateExpressions = function (html, context) {
-  var expressions = html
-    .match(/{{\s*[(\w|\(|\)|\.|,|\s)).]+\s*}}/g)
+  var expressions = (html
+    .match(/{{\s*[(\w|\(|\)|\.|,|\s|')).]+\s*}}/g) || [])
     .map(function (item) {
       return item.replace(/({{\s*|\s*}})/g, '');
     })
@@ -27,7 +27,22 @@ View._interpolateExpressions = function (html, context) {
             return item.replace(/\s/g, '');
           })
           .map(function (item) {
-            return View._accessByString(item, context)
+            var value = View._accessByString(item, context)
+            if(!value) {
+
+              if(new RegExp(/^'(.*)'$/).test(item))
+                return item.replace(/'/g, '');
+
+              if(item === 'true')
+                return true
+
+              if(item === 'false')
+                return false
+
+              if(!isNaN(parseInt(item, 10)))
+                return parseInt(item)
+            }
+            return value
           });
 
       var expressionName = (/^(.*?)(?:\()/g).exec(expression)[1]
@@ -46,8 +61,8 @@ View._interpolateExpressions = function (html, context) {
 
 View._interpolateValues = function (html, context) {
 
-  var values = html
-    .match(/{{\s*[\w\.]+\s*}}/g)
+  var values = (html
+    .match(/{{\s*[\w\.]+\s*}}/g) || [])
     .map(function (item) {
       return item.replace(/({{\s*|\s*}})/g, '');
     })
