@@ -97,10 +97,12 @@ Router._onLocationChange = function (argument) {
   var prevRoute = Router._currentRoute
   var nextRoute = Router.findCurrentRoute();
 
-  for (var i = 0; i < Router._routeChangeListeners.length; i++) {
-    Router._routeChangeListeners[i](prevRoute, nextRoute)
+  if(nextRoute) {
+    for (var i = 0; i < Router._routeChangeListeners.length; i++) {
+      Router._routeChangeListeners[i](prevRoute, nextRoute)
+    }
+    Router._currentRoute = nextRoute;
   }
-  Router._currentRoute = nextRoute;
 }
 
 window.Router = Router;

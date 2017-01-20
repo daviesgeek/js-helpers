@@ -10,18 +10,31 @@ app.registerSingleton('Logger', function () {
   return new Logger()
 })
 
-app.registerController('AppController', function (Logger, data) {
+app.registerController('AppController', function (Logger) {
   Logger.log('test!!!')
-  console.log(data)
+})
+
+app.registerController('ProfileController', function (Logger, user) {
+  Logger.log('test!!!')
+  console.log(user)
+
+  this.user = user
 })
 
 app.registerRoute('home', {
   url: '/',
   controller: 'AppController',
+  view: '/home.html'
+});
+
+app.registerRoute('profile', {
+  url: '/profile',
+  controller: 'ProfileController',
+  view: '/profile.html',
   resolve: {
-    data: function () {
+    user: function () {
       return new Promise(function(resolve) {
-        resolve({data: 'whooot!'});
+        resolve({firstName: 'Matthew', lastName: 'Davies'});
       });
     }
   }

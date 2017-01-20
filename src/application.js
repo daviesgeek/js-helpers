@@ -31,11 +31,9 @@ var Application = function (name) {
 
     var resolvedData = {}
 
-    if(route.resolve) {
-      var promises = [new Promise(function (resolve) {
-        resolve()
-      })]
+    var promises = [new Promise(function (resolve) { resolve() })]
 
+    if (route.resolve) {
       for(var item in route.resolve) {
         var resolve = this.container.call(route.resolve[item])
 
@@ -48,13 +46,13 @@ var Application = function (name) {
         } else {
           resolvedData[item] = resolve
         }
-
       }
-
-      Promise.all(promises).then(function () {
-        this.container.call(this._getController(route.controller), resolvedData)
-      }.bind(this))
     }
+
+    Promise.all(promises).then(function () {
+      var viewContext = new (this.container.bindParams(this._getController(route.controller), resolvedData))()
+      document.getElementsByTagName('view')[0].innerHTML = View.render(Template.find(route.view), viewContext)
+    }.bind(this))
 
   }
 

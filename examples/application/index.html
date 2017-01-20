@@ -4,9 +4,21 @@
   <title></title>
   <script type="text/javascript" src="../../src/router.js"></script>
   <script type="text/javascript" src="../../src/di.js"></script>
+  <script type="text/javascript" src="../../src/template.js"></script>
+  <script type="text/javascript" src="../../src/view.js"></script>
   <script type="text/javascript" src="../../src/application.js"></script>
-  <script type="text/javascript" src="app.js"></script>
 </head>
 <body>
+  <view></view>
+  <script type="text/template" name="/home.html">
+    <h1>Home!</h1>
+    <a href="#/profile">View Profile!</a>
+  </script>
+  <script type="text/template" name="/profile.html">
+    <h1>Profile!</h1>
+    <h2>{{ user.firstName }} {{user.lastName}}</h2>
+    <a href="#/">Back to home!</a>
+  </script>
+  <script type="text/javascript" src="app.js"></script>
 </body>
 </html>
